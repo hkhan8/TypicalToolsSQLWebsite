@@ -1,0 +1,34 @@
+﻿@model TypicalTools.Models.Product
+
+@{
+    ViewData["Title"] = "UpdatePrice";
+}
+
+<h1>Update price for product: @Model.ProductCode.ToString()</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="UpdatePrice">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProductPrice" class="control-label"></label>
+                <input asp-for="ProductPrice" class="form-control" />
+                <span asp-validation-for="ProductPrice" class="text-danger"></span>
+            </div>
+            @Html.HiddenFor(c => c.ProductCode)
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <!-- Redirect back to a list of all comments -->
+    @Html.ActionLink("Back to Products", "CommentList", "Comment", new {id = Model.ProductCode})
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
