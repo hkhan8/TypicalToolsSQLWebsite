@@ -150,6 +150,9 @@ namespace TypicalTools.DataAccess
                 string sql = "INSERT INTO products(product_name, product_price, product_description)" +
                              $"VALUES('{product.ProductName}', {product.ProductPrice}, '{product.ProductDescription}');";
                 await connection.ExecuteAsync(sql);
+
+
+
             }
         }
 
