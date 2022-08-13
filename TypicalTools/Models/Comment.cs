@@ -5,7 +5,6 @@ namespace TypicalTools.Models
 {
     public class Comment
     {
-
         public int CommentId { get; set; }
         [Display(Name = "Comment")]
         public string CommentText { get; set; }
@@ -13,9 +12,5 @@ namespace TypicalTools.Models
         public int ProductCode { get; set; }
         public string SessionId { get; set; }
         public DateTime CreatedDate { get; set; }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
     }
 }

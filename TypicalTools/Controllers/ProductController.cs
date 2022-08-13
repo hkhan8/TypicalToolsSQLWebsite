@@ -45,6 +45,7 @@ namespace TypicalTools.Controllers
             // A session id is only set once a value has been added!
             // adding a value here to ensure the session is created
             HttpContext.Session.SetString("ProductName", product.ProductName);
+            // string to return in a currency format
             HttpContext.Session.SetString("ProductPrice", product.ProductPrice.ToString());
             HttpContext.Session.SetString("ProductDescription", product.ProductDescription);
 
@@ -59,7 +60,7 @@ namespace TypicalTools.Controllers
             return View(product);
         }
 
-        // Receive and handle the newly created product data
+        // Receive and handle the newly updated price data
         [HttpPost]
         public async Task<IActionResult> UpdatePrice(Product product)
         {
@@ -67,6 +68,7 @@ namespace TypicalTools.Controllers
 
             // A session id is only set once a value has been added!
             // adding a value here to ensure the session is created
+            // string to return in a currency format
             HttpContext.Session.SetString("ProductPrice", product.ProductPrice.ToString());
 
             return RedirectToAction("Index", "Product");
