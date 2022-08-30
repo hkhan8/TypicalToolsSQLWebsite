@@ -42,6 +42,7 @@ namespace TypicalTools.Controllers
 
         // Receive and handle the newly created comment data
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddComment(Comment comment)
         {
             await context.AddComment(comment, HttpContext.Session.Id);
@@ -81,6 +82,7 @@ namespace TypicalTools.Controllers
 
         //Receive and handle the edited comment data
        [HttpPost]
+       [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditComment(Comment comment)
         {
             if (comment == null)

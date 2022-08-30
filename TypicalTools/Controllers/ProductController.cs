@@ -38,6 +38,7 @@ namespace TypicalTools.Controllers
 
         // Receive and handle the newly created product data
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProduct(Product product)
         {
             await context.AddProduct(product);
@@ -62,6 +63,7 @@ namespace TypicalTools.Controllers
 
         // Receive and handle the newly updated price data
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdatePrice(Product product)
         {
             await context.UpdatePrice(product);

@@ -49,13 +49,16 @@ namespace TypicalTools.DataAccess
 
                 while (productTable.Read())
                 {
+                    //instantiation
                     Product productList_ = new Product();
+                    //adding properting to productList
                     productList_.ProductCode = int.Parse(productTable.GetValue(0).ToString());
                     productList_.ProductName = productTable.GetValue(1).ToString();
                     productList_.ProductPrice = decimal.Parse(productTable.GetValue(2).ToString());
                     productList_.ProductDescription = productTable.GetValue(3).ToString();
                     try
                     {
+                        //in try catch to stop application crash
                         string s = productTable.GetValue(4).ToString();
                         productList_.UpdatedDate = DateTime.Parse(s);
                     }
@@ -69,7 +72,11 @@ namespace TypicalTools.DataAccess
                 return productList;
             }
         }
-
+        /// <summary>
+        /// gets single products by product code
+        /// </summary>
+        /// <param name="productCode"></param>
+        /// <returns>list of single product</returns>
         public async Task<Product> GetSingleProduct(int productCode)
         {
             //Using statement to create connection object and automatically close and dispose of connection once finished.
@@ -79,7 +86,10 @@ namespace TypicalTools.DataAccess
                 return productList_.Where(c => c.ProductCode == productCode).FirstOrDefault();
             }
         }
-
+        /// <summary>
+        /// retrieves all comments from database
+        /// </summary>
+        /// <returns>list of comments</returns>
         public async Task<List<Comment>> ParseComments()
         {
             //Using statement to create connection object and automatically close and dispose of connection once finished.
@@ -92,6 +102,7 @@ namespace TypicalTools.DataAccess
 
                 while (commentTable.Read())
                 {
+                    //instantiation of commentList
                     Comment commentList_ = new Comment();
                     commentList_.CommentId = int.Parse(commentTable.GetValue(0).ToString());
                     commentList_.CommentText = commentTable.GetValue(1).ToString();
@@ -113,7 +124,11 @@ namespace TypicalTools.DataAccess
                 return commentList;
             }
         }
-
+        /// <summary>
+        /// retrieve comments for specific product
+        /// </summary>
+        /// <param name="productCode"></param>
+        /// <returns>list</returns>
         public async Task<List<Comment>> GetCommentsForProductAsync(int productCode)
         {
             //Using statement to create connection object and automatically close and dispose of connection once finished.
@@ -130,7 +145,12 @@ namespace TypicalTools.DataAccess
                 return allComments.Where(c => c.ProductCode == productCode).ToList();
             }
         }
-
+        /// <summary>
+        /// adds comments to product in the right session
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="sessionId"></param>
+        /// <returns></returns>
         public async Task AddComment(Comment comment, string sessionId)
         {
             //Using statement to create connection object and automatically close and dispose of connection once finished.
@@ -141,7 +161,11 @@ namespace TypicalTools.DataAccess
                 await connection.ExecuteAsync(sql);
             }
         }
-
+        /// <summary>
+        /// adds product to database
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
         public async Task AddProduct(Product product)
         {
             //Using statement to create connection object and automatically close and dispose of connection once finished.
@@ -155,7 +179,11 @@ namespace TypicalTools.DataAccess
 
             }
         }
-
+        /// <summary>
+        /// updating price of product
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
         public async Task UpdatePrice(Product product)
         {
             //Using statement to create connection object and automatically close and dispose of connection once finished.
@@ -167,7 +195,11 @@ namespace TypicalTools.DataAccess
                 await connection.ExecuteAsync(sql);
             }
         }
-
+        /// <summary>
+        /// editing specific comment
+        /// </summary>
+        /// <param name="updatedComment"></param>
+        /// <returns>bool</returns>
         public async Task<bool> EditComment(Comment updatedComment)
         {
             //Using statement to create connection object and automatically close and dispose of connection once finished.
@@ -190,14 +222,18 @@ namespace TypicalTools.DataAccess
                 return comments.Where(c => c.CommentId == commentId).FirstOrDefault();
             }
         }
-
+        /// <summary>
+        /// deleting a specific comment
+        /// </summary>
+        /// <param name="commentId"></param>
+        /// <returns>bool</returns>
         public async Task<bool> DeleteComment(int commentId)
         {
             //Using statement to create connection object and automatically close and dispose of connection once finished.
             using (var connection = new SqlConnection(config.GetConnectionString("Default")))
             {
                 var existingComments = await ParseComments();
-
+                //loop through and delete matching comment
                 foreach (var item in existingComments)
                 {
                     if (item.CommentId == commentId)
