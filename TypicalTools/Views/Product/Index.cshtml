@@ -16,7 +16,16 @@
                 <h3>$@product.ProductPrice</h3>
                 <p>@product.ProductDescription</p>
                 <small>Product Code: @product.ProductCode</small>
-                <small>Last Updated: @product.UpdatedDate</small>
+            @{
+                if (product.IsNew)
+                {
+                    <small>Created: @product.UpdatedDate</small>
+                }
+                else
+                {
+                   <small>Last Updated: @product.UpdatedDate</small>
+                }
+            }
                 @Html.ActionLink("Comments", "CommentList", "Comment", new {id = product.ProductCode }, new {@class= "btn btn-primary m-2" })
                 @Html.ActionLink("Update Price", "UpdatePrice", "Product", new {id = product.ProductCode }, new {@class= "btn btn-primary m-2" })
         </div>

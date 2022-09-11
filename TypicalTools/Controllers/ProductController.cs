@@ -41,7 +41,20 @@ namespace TypicalTools.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProduct(Product product)
         {
-            await context.AddProduct(product);
+            // Check if the admin is logged in
+            string authStatus = HttpContext.Session.GetString("Authenticated");
+            bool isAdmin = !String.IsNullOrWhiteSpace(authStatus) && authStatus.Equals("True");
+
+            // Peform conditionally
+            if (product.SessionId == HttpContext.Session.Id || isAdmin)
+            {
+                await context.AddProduct(product);
+            }
+
+            else
+            {
+                return RedirectToAction("AdminLogin", "Admin");
+            }
 
             // A session id is only set once a value has been added!
             // adding a value here to ensure the session is created

@@ -16,5 +16,7 @@ namespace TypicalTools.Models
         public decimal ProductPrice { get; set; }
         public string ProductDescription { get; set; }
         public DateTime UpdatedDate { get; set; }
+        public bool IsNew { get; set; }
+        public string SessionId { get; set; }
     }
 }

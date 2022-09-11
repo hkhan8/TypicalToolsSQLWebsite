@@ -67,6 +67,15 @@ namespace TypicalTools.DataAccess
 
                         //throw;
                     }
+                    try
+                    {
+                        string x = productTable.GetValue(5).ToString();
+                        productList_.IsNew = bool.Parse(productTable.GetValue(5).ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        //throw;
+                    }                    
                     productList.Add(productList_);
                 }
                 return productList;
@@ -190,8 +199,9 @@ namespace TypicalTools.DataAccess
             using (var connection = new SqlConnection(config.GetConnectionString("Default")))
             {
                 string sql = "UPDATE products " +
-                             $"SET product_price = {product.ProductPrice} " +
+                             $"SET product_price = {product.ProductPrice}, is_new = 0 "+
                              $"WHERE product_code = {product.ProductCode};";
+                             
                 await connection.ExecuteAsync(sql);
             }
         }
@@ -242,12 +252,34 @@ namespace TypicalTools.DataAccess
                                       $"WHERE comment_id = {commentId}";
                         await connection.ExecuteAsync(sql);
 
-
-
                         return true;
                     }
                 }
                 return false;
+            }     
+        }
+
+        public async Task<int> GetUserDetails (string username, string password)
+        {
+            //Using statement to create connection object and automatically close and dispose of connection once finished.
+            using (var connection = new SqlConnection(config.GetConnectionString("Default")))
+            {
+                string sql = "SELECT count(UserName) FROM users " +
+                             $"WHERE UserName = '{username}' AND Password = '{password}';";
+                var userDetails = await connection.ExecuteReaderAsync(sql);
+                //var x = userDetails.GetValue(sql);
+                var temp = await userDetails.ReadAsync();
+
+                object b = -1;
+                if (temp == true)
+                {
+                    b = userDetails.GetValue(0);
+                }
+                //else
+                //{
+                //    return 0;
+                //}
+                return (int)b;
             }
         }
     }
