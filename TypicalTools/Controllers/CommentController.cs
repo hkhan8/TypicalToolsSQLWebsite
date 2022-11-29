@@ -17,6 +17,11 @@ namespace TypicalTools.Controllers
             this.context = context;
         }
 
+        /// <summary>
+        /// receives all the comment list for a product
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>index</returns>
         [HttpGet]
         public async Task<IActionResult> CommentList(int id)
         {
@@ -60,8 +65,8 @@ namespace TypicalTools.Controllers
             var comment = await context.GetSingleComment(commentId);
 
             // Check if the admin is logged in
-            string authStatus = HttpContext.Session.GetString("Authenticated");
-            bool isAdmin = !String.IsNullOrWhiteSpace(authStatus) && authStatus.Equals("True");
+            string authStatus = HttpContext.Session.GetString("Role");
+            bool isAdmin = !String.IsNullOrWhiteSpace(authStatus);
 
             // Peform the deletion conditionally
             if (comment.SessionId == HttpContext.Session.Id || isAdmin)
@@ -91,8 +96,8 @@ namespace TypicalTools.Controllers
             }
 
             // Check if the admin is logged in
-            string authStatus = HttpContext.Session.GetString("Authenticated");
-            bool isAdmin = !String.IsNullOrWhiteSpace(authStatus) && authStatus.Equals("True");
+            string authStatus = HttpContext.Session.GetString("Role");
+            bool isAdmin = !String.IsNullOrWhiteSpace(authStatus);
 
             if (comment.SessionId == HttpContext.Session.Id || isAdmin)
             {

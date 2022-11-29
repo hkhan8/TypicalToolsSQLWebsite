@@ -259,27 +259,92 @@ namespace TypicalTools.DataAccess
             }     
         }
 
-        public async Task<int> GetUserDetails (string username, string password)
+        public AdminUser CheckLogin(AdminUser account)
         {
-            //Using statement to create connection object and automatically close and dispose of connection once finished.
-            using (var connection = new SqlConnection(config.GetConnectionString("Default")))
+            try
             {
-                string sql = "SELECT count(UserName) FROM users " +
-                             $"WHERE UserName = '{username}' AND Password = '{password}';";
-                var userDetails = await connection.ExecuteReaderAsync(sql);
-                //var x = userDetails.GetValue(sql);
-                var temp = await userDetails.ReadAsync();
-
-                object b = -1;
-                if (temp == true)
+                using (var connection = new SqlConnection(config.GetConnectionString("Default")))
                 {
-                    b = userDetails.GetValue(0);
+                    string sql = "SELECT * FROM dbo.users WHERE \"UserName\" = @UserName";
+                    AdminUser user = connection.QuerySingle<AdminUser>(sql, account);
+
+                    if (user == null)
+                    {
+                        return null;
+                    }
+
+                    string passwordCheck = PasswordHasher.ConvertStringToHash(account.Password);
+                    //if (passwordCheck.Equals(user.Password))
+                    if (passwordCheck == user.Password)
+                    {
+                        return user;
+                    }
+
+                    return null;
                 }
-                //else
-                //{
-                //    return 0;
-                //}
-                return (int)b;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
+        //public async Task<int> GetUserCount (string username, string password)
+        //{
+        //    //Using statement to create connection object and automatically close and dispose of connection once finished.
+        //    using (var connection = new SqlConnection(config.GetConnectionString("Default")))
+        //    {
+        //        connection.Open();
+
+        //        //parameterized query for login
+        //        string sql = "SELECT count(UserName) FROM dbo.users WHERE \"UserName\" = @UserName AND \"Password\" = @Password;";
+        //        SqlCommand sqlCommand = new SqlCommand(sql, connection);
+
+        //        sqlCommand.CommandType = CommandType.Text;
+        //        sqlCommand.Parameters.AddWithValue("@UserName", username);
+        //        sqlCommand.Parameters.AddWithValue("@Password", password);
+
+        //        int count = 0;
+        //        try
+        //        {
+        //            var a = (int)sqlCommand.ExecuteScalar();
+        //            count = a;
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            // to not break app if error
+        //        }
+        //        connection.Close();
+        //        return count;
+        //    }
+        //}
+
+        public bool CreateAccount(AdminUser account)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(config.GetConnectionString("Default")))
+                {
+                    string sql = "SELECT COUNT(*) FROM dbo.users WHERE UserName = @UserName";
+                    int count = connection.QuerySingle<int>(sql, account);
+
+                    if (count > 0)
+                    {
+                        return false;
+                    }
+
+                    account.Password = PasswordHasher.ConvertStringToHash(account.Password);
+
+                    sql = "INSERT INTO dbo.users (UserName,Password, Role) " +
+                          "VALUES (@UserName, @Password, @Role)";
+                    connection.Execute(sql, account);
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }

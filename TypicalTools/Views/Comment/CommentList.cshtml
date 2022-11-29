@@ -6,10 +6,10 @@
     int productCode = int.Parse(@Context.Request.RouteValues["id"].ToString());
     
     // retrieve the Authentication status from the session
-    string authStatus = Context.Session.GetString("Authenticated");
+    string role = Context.Session.GetString("Role");
     
     // use a flag to indicate whether or not the user is logged in
-    bool loggedIn = !String.IsNullOrEmpty(authStatus) && authStatus.Equals("True");
+    bool loggedIn = !String.IsNullOrEmpty(role);
 }
 
 
@@ -17,10 +17,13 @@
 
 
 
-
-<p>
+@if(loggedIn == true)
+{
+    <p>
     @Html.ActionLink("Add a new Comment", "AddComment","Comment", new {productCode = @productCode})
-</p>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>

@@ -15,7 +15,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "launchUrl": "Admin/AdminLogin"
+      "launchUrl": "Product/Index"
     },
     "TypicalTools": {
       "commandName": "Project",

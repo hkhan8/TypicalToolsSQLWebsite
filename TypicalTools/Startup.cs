@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TypicalTools.Services;
 
 namespace TypicalTools
 {
@@ -37,6 +38,9 @@ namespace TypicalTools
             services.AddSingleton<DapperContext>();
 
             services.AddControllersWithViews();
+
+            services.AddScoped<FileLoaderService>();
+            services.AddScoped<EncryptionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

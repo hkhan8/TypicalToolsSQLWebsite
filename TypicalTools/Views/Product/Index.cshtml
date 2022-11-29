@@ -1,35 +1,47 @@
 ﻿@model List<Product>
+@using Microsoft.AspNetCore.Http;
 @{
     ViewData["Title"] = "Home Page";
+    
+    // retrieve the Authentication status from the session
+    string role = Context.Session.GetString("Role");
+    
+    // use a flag to indicate whether or not the user is logged in
+    bool loggedIn = !String.IsNullOrEmpty(role);
 }
 
-<div class="text-center">
-    <h1>Products</h1>
-    <button type="button" onclick="location.href='@Url.Action("AddProduct", "Product")'">Add a Product</button>
-</div>
+@if(role == "Admin")
+{
+    <div class="text-center">
+        <h1>Products</h1>
+        <button type="button" onclick="location.href='@Url.Action("AddProduct", "Product")'">Add a Product</button>
+    </div>
+}
 
-<div class="card-container">
-    @foreach(var product in Model) 
+@*@if (!String.IsNullOrEmpty(ViewBag?.Role))
+{
+    <div class="text-center">
+        <h1>Products</h1>
+        <button type="button" onclick="location.href='@Url.Action("AddProduct", "Product")'">Add a Product</button>
+    </div>
+}*@
+
+    <div class="card-container">
+        @foreach(var product in Model) 
     {      
-        <div class="single-card card shadow">
-                <h2>@product.ProductName</h2>
-                <h3>$@product.ProductPrice</h3>
-                <p>@product.ProductDescription</p>
-                <small>Product Code: @product.ProductCode</small>
-            @{
-                if (product.IsNew)
-                {
-                    <small>Created: @product.UpdatedDate</small>
-                }
-                else
-                {
-                   <small>Last Updated: @product.UpdatedDate</small>
-                }
-            }
-                @Html.ActionLink("Comments", "CommentList", "Comment", new {id = product.ProductCode }, new {@class= "btn btn-primary m-2" })
-                @Html.ActionLink("Update Price", "UpdatePrice", "Product", new {id = product.ProductCode }, new {@class= "btn btn-primary m-2" })
-        </div>
+            <div class="single-card card shadow">
+                    <h2>@product.ProductName</h2>
+                    <h3>$@product.ProductPrice</h3>
+                    <p>@product.ProductDescription</p>
+                    <small>Product Code: @product.ProductCode</small>
+                    <small>Last Updated: @product.UpdatedDate</small>
+                    @Html.ActionLink("Comments", "CommentList", "Comment", new {id = product.ProductCode }, new {@class= "btn btn-primary m-2" })
+                    @if(role == "Admin")
+                    {
+                        @Html.ActionLink("Update Price", "UpdatePrice", "Product", new {id = product.ProductCode }, new {@class= "btn btn-primary m-2" })
+                    }
+            </div>
     }
 
-</div>
+    </div>
 

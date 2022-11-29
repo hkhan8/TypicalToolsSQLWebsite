@@ -1,4 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+
+
+@{
+    // retrieve the Authentication status from the session
+    string role = Context.Session.GetString("Role");
+    
+    // use a flag to indicate whether or not the user is logged in
+    bool loggedIn = !String.IsNullOrEmpty(role);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,12 +30,29 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AdminLogin">Admin Login</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="product" asp-action="Index">Our Products</a>
-                        </li>
+                        </li
                     </ul>
+                </div>
+                <div>
+                    @if (!loggedIn)
+                    {
+                        @Html.ActionLink("Login", "AdminLogin", "Admin", new { redirectURL = Context.Request.Path.ToString() }, new {@class = "btn btn-success" })
+                        @Html.ActionLink("Register", "Register", "Admin", new { redirectURL = Context.Request.Path.ToString() }, new {@class = "btn btn-success" })
+                    }
+                    else
+                    {   
+                        if(role == "Admin")
+                        {
+                            @Html.ActionLink("Create a User", "Register", "Admin", new { redirectURL = Context.Request.Path.ToString() }, new {@class = "btn btn-success" })
+                        }
+
+                        @Html.ActionLink("Upload your Warranty", "Index", "Upload", new { redirectURL = Context.Request.Path.ToString() }, new {@class = "btn btn-success" })
+
+                        @Html.ActionLink("Logout", "Logout", "Admin", new { redirectURL = Context.Request.Path.ToString() }, new {@class = "btn btn-success" })
+
+                    }
+
                 </div>
             </div>
         </nav>

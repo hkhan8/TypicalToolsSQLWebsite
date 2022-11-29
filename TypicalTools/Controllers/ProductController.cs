@@ -8,6 +8,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using System.Text;
+using System.Web;
 
 namespace TypicalTools.Controllers
 {
@@ -24,6 +27,7 @@ namespace TypicalTools.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await context.ParseProducts();
+            ViewBag.Role = HttpContext.Session.GetString("Role");
             return View(products.ToList());
         }
 
@@ -42,8 +46,18 @@ namespace TypicalTools.Controllers
         public async Task<IActionResult> AddProduct(Product product)
         {
             // Check if the admin is logged in
-            string authStatus = HttpContext.Session.GetString("Authenticated");
-            bool isAdmin = !String.IsNullOrWhiteSpace(authStatus) && authStatus.Equals("True");
+            string authStatus = HttpContext.Session.GetString("Role");
+            bool isAdmin = !String.IsNullOrWhiteSpace(authStatus);
+
+            //encoding product description to prevent script injection attack
+            StringBuilder sb = new StringBuilder();
+            sb.Append(HttpUtility.HtmlEncode(product.ProductDescription));
+
+            product.ProductDescription = sb.ToString();
+
+            string strDes = HttpUtility.HtmlEncode(product.ProductDescription);
+            product.ProductDescription = strDes;
+
 
             // Peform conditionally
             if (product.SessionId == HttpContext.Session.Id || isAdmin)

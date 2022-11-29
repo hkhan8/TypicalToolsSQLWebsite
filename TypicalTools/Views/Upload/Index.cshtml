@@ -1,0 +1,45 @@
+﻿@model String
+@{
+    ViewData["Title"] = "Upload";
+}
+
+<div class="row d-flex justify-content-center">
+    <div class="col-8 card align-items-center p-3">
+        <h2>Upload a file</h2>
+        <form method="post" enctype="multipart/form-data" asp-controller="Upload" asp-action="ImageUpload">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <p>Upload a file using this form.</p>
+                    <input type="file" name="file" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Upload"/>
+                    @{
+                        if(ViewBag.Message != null)
+                        {
+                            @ViewBag.Message
+                        }
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@if(Model == "Admin")
+{
+  <div class="row d-flex justify-content-center mt-3">
+    <div class="col-8 card align-items-center p-3">
+        <h2>Download a file</h2>
+
+        <form method="post" asp-action="DownloadFile">
+            <input type="text" placeholder="filename.*" name="fileName"/>
+            <input type="submit" value="Download"/>
+        </form>
+    </div>
+</div>
+}
+
